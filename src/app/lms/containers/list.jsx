@@ -3,99 +3,61 @@ import {
   Layout,
   Typography,
   Table,
-  Tag,
   Space,
   Button,
   Input,
-  Col,
-  Row,
   Select,
-  InputNumber,
-  DatePicker,
-  AutoComplete,
-  Cascader,
 } from "antd";
 import lmsApi from "api/lms";
 import coreService from "services/core";
+import Modal from "../components";
 
 const localStorageAccessKey = "lmsTable";
 const { Column, ColumnGroup } = Table;
 const { Option } = Select;
 const { Content } = Layout;
 const { Title } = Typography;
-const options = [
-  {
-    value: "zhejiang",
-    label: "Zhejiang",
-    children: [
-      {
-        value: "hangzhou",
-        label: "Hangzhou",
-        children: [
-          {
-            value: "xihu",
-            label: "West Lake",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    value: "jiangsu",
-    label: "Jiangsu",
-    children: [
-      {
-        value: "nanjing",
-        label: "Nanjing",
-        children: [
-          {
-            value: "zhonghuamen",
-            label: "Zhong Hua Men",
-          },
-        ],
-      },
-    ],
-  },
-];
 
 const LMSList = () => {
   const [lms, setLms] = useState([]);
   const [searchKey, setSearchKey] = useState("all");
   const searchKeyList = ["all", "subjectName", "taskName"];
-  const params = {
-    rowData: lms,
-    searchKey: searchKey,
-  };
+  
+  /** modal status */
+  const [saveModal, setSaveModal] = useState(false);
+  const [writeModal, setWriteModal] = useState(false);
+  const [detailModal, setDetailModal] = useState(false);
+
+  /** modal data */
+  const [writeModalData, setWriteModalData] = useState();
+  const [detailModalData, setDetailModalData] = useState();
 
   useEffect(() => {
-    console.log(1);
+    const params = {
+      rowData: lms,
+      searchKey: searchKey,
+    };
     async function fetchData() {
-      const res = await lmsApi.getTaskList(params);
-
-      setLms(res.data);
-      coreService.setLocalStorage(localStorageAccessKey, res.data);
+      await searchDo(params, (res) => {
+        coreService.setLocalStorage(localStorageAccessKey, res.data);
+      });
     }
 
     fetchData();
   }, []);
 
-  const searchFn = async (value) => {
+  async function searchFn (value) {
     const storedRowData = coreService.getLocalStorage(localStorageAccessKey);
     const params = {
       rowData: storedRowData,
       searchWord: value,
       searchKey: searchKey,
     };
-    const res = await lmsApi.getTaskList(params);
 
-    setLms(res.data);
+    await searchDo(params);
   };
 
-  const onSearchKeyChange = (value) => {
-    setSearchKey(value);
-  };
-
-  const loadNewData = async () => {
+  async function loadNewData () {
     coreService.removeLocalStorage(localStorageAccessKey);
 
     const params = {
@@ -103,10 +65,23 @@ const LMSList = () => {
       searchKey: "all",
     };
 
+    await searchDo(params, (res) => {
+      coreService.setLocalStorage(localStorageAccessKey, res.data);
+    });
+  };
+
+  async function searchDo (params, next) {
     const res = await lmsApi.getTaskList(params);
 
     setLms(res.data);
-    coreService.setLocalStorage(localStorageAccessKey, res.data);
+
+    if (next) {
+      next(res);
+    }
+  }
+
+  function onSearchKeyChange (value) {
+    setSearchKey(value);
   };
 
   return (
@@ -131,23 +106,34 @@ const LMSList = () => {
               style={{ width: "30%" }}
               placeholder="all"
               onSearch={(value, e) => {
-                e.target.blur();
-
                 searchFn(value);
               }}
             />
           </Input.Group>
         </>
-        <Button
-          type="primary"
-          onClick={() => {
-            loadNewData();
-          }}
-        >
-          데이터 갱신
-        </Button>
+        <>
+          <Space size="small">
+          <Button
+              type="primary"
+              onClick={() => {
+                setSaveModal(true);
+              }}
+            >
+              데이터 저장
+            </Button>
+            <Button
+              type="primary"
+              onClick={() => {
+                loadNewData();
+              }}
+            >
+              데이터 갱신
+            </Button>
+          </Space>
+        </>
       </div>
 
+      {/* main content */}
       {lms.length ? (
         <div>
           <Table dataSource={lms}>
@@ -166,12 +152,24 @@ const LMSList = () => {
                 console.log(text, record);
                 return (
                   <Space size="middle">
-                    <Button type="primary">상세</Button>
+                    <Button
+                      type="primary"
+                      onClick={() => {
+                        setDetailModalData(text);
+                        setDetailModal(true)
+                      }}
+                    >
+                      상세
+                    </Button>
+                    <Button type="primary">작성</Button>
                   </Space>
                 );
               }}
             />
           </Table>
+          <Modal.LMSSaveModal visible={saveModal} setVisible={setSaveModal} data={lms} />
+          <Modal.LMSWriteModal visible={writeModal} setVisible={setWriteModal} data={writeModalData} />
+          <Modal.LMSDetailModal visible={detailModal} setVisible={setDetailModal} data={detailModalData} />
         </div>
       ) : (
         <p>loading</p>

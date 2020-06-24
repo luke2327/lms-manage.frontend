@@ -9,5 +9,5 @@ export default {
 
   removeLocalStorage(key) {
     localStorage.removeItem(key);
-  }
+  },
 }

@@ -6,7 +6,7 @@ const { Header } = Layout;
 const AppHeader = () => {
   return (
     <Header>
-      <Typography>Typo</Typography>
+      <Typography style={{ color: '#fff' }}>LMS</Typography>
     </Header>
   );
 };
