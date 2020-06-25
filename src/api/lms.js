@@ -5,6 +5,10 @@ export default {
     return await api.send("api/lms/generateTaskList", params, "post");
   },
 
+  deleteTaskList: async (params) => {
+    return await api.send("api/lms/deleteTaskList", params, "post");
+  },
+
   getTaskList: async (params) => {
     return await api.send("api/lms/getTaskList", params, "post");
   },

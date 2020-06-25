@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Layout, Typography, Table, Space, Button, Input, Select } from "antd";
-import { CheckCircleTwoTone, CloseCircleOutlined } from "@ant-design/icons";
 import lmsApi from "../../../api/lms";
 import coreService from "../../../services/core";
 import Modal from "../components";
@@ -14,8 +13,8 @@ const ResolvedLMSList = () => {
   const [resolvedLms, setResolvedLms] = useState([]);
 
   /** search data */
-  const [searchKey, setSearchKey] = useState("all");
-  const searchKeyList = ["all", "subjectName", "taskName"];
+  const [searchKey, setSearchKey] = useState("subjectName");
+  const searchKeyList = ["subjectName", "taskName"];
 
   /** modal status */
   const [detailModal, setDetailModal] = useState(false);
@@ -141,7 +140,9 @@ const ResolvedLMSList = () => {
             data={detailModalData}
           />
         </div>
-      ) : '제출 한 과제가 없습니다.'}
+      ) : (
+        "제출 한 과제가 없습니다."
+      )}
     </Content>
   );
 };

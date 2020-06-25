@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Layout, Typography, Table, Space, Button, Input, Select } from "antd";
+import {
+  Layout,
+  Typography,
+  Table,
+  Space,
+  Button,
+  Input,
+  Select,
+  message,
+} from "antd";
 import { CheckCircleTwoTone, CloseCircleOutlined } from "@ant-design/icons";
 import lmsApi from "../../../api/lms";
 import coreService from "../../../services/core";
@@ -17,8 +26,8 @@ const LMSList = () => {
   const [lmsAll, setLmsAll] = useState([]);
 
   /** search data */
-  const [searchKey, setSearchKey] = useState("all");
-  const searchKeyList = ["all", "subjectName", "taskName"];
+  const [searchKey, setSearchKey] = useState("subjectName");
+  const searchKeyList = ["subjectName", "taskName"];
 
   /** modal status */
   const [saveModal, setSaveModal] = useState(false);
@@ -39,19 +48,19 @@ const LMSList = () => {
       currentTaskTableKey: coreService.getLocalStorage("currentTaskTable"),
     };
 
-    if (params.currentTaskTableKey) {
-      async function fetchData() {
+    async function fetchData() {
+      if (params.currentTaskTableKey) {
         await searchDo(params);
-  
-        await lmsApi.getAllTaskList().then((re) => {
-          setLmsAll(re.data);
-        });
+      } else {
+        setMsg("데이터가 없습니다. 새로운 데이터를 생성 해 주세요.");
       }
-  
-      fetchData();
-    } else {
-      setMsg('데이터가 없습니다. 새로운 데이터를 생성 해 주세요.');
+
+      await lmsApi.getAllTaskList().then((re) => {
+        setLmsAll(re.data);
+      });
     }
+
+    fetchData();
   }, []);
 
   async function searchFn(value) {
@@ -96,7 +105,9 @@ const LMSList = () => {
 
     await lmsApi.submitTask(params);
 
-    await searchDo({ currentTaskTableKey });
+    await searchDo({ currentTaskTableKey }, () => {
+      message.success("성공적으로 제출하였습니다.");
+    });
   }
 
   function onSearchKeyChange(value) {
@@ -125,25 +136,27 @@ const LMSList = () => {
             <Input.Search
               style={{ width: "30%" }}
               onSearch={(value, e) => {
-                searchFn(value);
+                if (!coreService.getLocalStorage("currentTaskTable")) {
+                  message.error("먼저 데이터를 생성 후 저장 해 주세요.");
+                } else {
+                  searchFn(value);
+                }
               }}
             />
           </Input.Group>
         </>
         <>
           <Space size="small">
-            {
-              lms.length ? (
-                <Button
-                  type="primary"
-                  onClick={() => {
-                    setSaveModal(true);
-                  }}
-                >
-                  데이터 저장
-                </Button>
-              ) : null
-            }
+            {lms.length ? (
+              <Button
+                type="primary"
+                onClick={() => {
+                  setSaveModal(true);
+                }}
+              >
+                데이터 저장
+              </Button>
+            ) : null}
             <Button
               type="primary"
               onClick={() => {
@@ -267,7 +280,7 @@ const LMSList = () => {
           />
         </div>
       ) : (
-        <p>{msg ? msg : 'loading'}</p>
+        <p>{msg ? msg : "loading"}</p>
       )}
     </Content>
   );

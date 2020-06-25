@@ -17,7 +17,7 @@ const AppHeader = ({ nav, setNav }) => {
       <Typography.Text
         style={{ color: "#fff", paddingLeft: 20, paddingRight: 20 }}
       >
-        LMS Manage Syetem
+        LMS
       </Typography.Text>
       <Menu
         mode="horizontal"

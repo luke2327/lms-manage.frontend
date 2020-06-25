@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Modal, Typography, Input, Button, Space } from "antd";
+import { Modal, Typography, Input, Button, Space, message } from "antd";
 import coreService from "../../../services/core";
 import lmsApi from "../../../api/lms";
 
@@ -76,6 +76,16 @@ const LMSSaveModal = ({
     coreService.setLocalStorage("currentTaskTable", key);
   }
 
+  async function deleteTask(key) {
+    await lmsApi.deleteTaskList({ currentTaskTableKey: key });
+
+    const allTaskList = await lmsApi.getAllTaskList().then((re) => re.data);
+
+    setDataAll(allTaskList);
+
+    message.success("성공적으로 삭제하였습니다.");
+  }
+
   async function onAfterClose() {
     setTableName("");
     setModalSubmit(true);
@@ -84,6 +94,8 @@ const LMSSaveModal = ({
       const params = {
         currentTaskTableKey: applyKey,
       };
+
+      setApplyKey("");
 
       next(params);
     }
@@ -141,6 +153,17 @@ const LMSSaveModal = ({
               <Typography.Text>{key}</Typography.Text>
               <Space>
                 <Typography.Text>{value.createdAt}</Typography.Text>
+                <Button
+                  size="small"
+                  disabled={
+                    coreService.getLocalStorage("currentTaskTable") === key
+                  }
+                  onClick={() => {
+                    deleteTask(key);
+                  }}
+                >
+                  삭제
+                </Button>
                 <Button
                   type="primary"
                   size="small"
