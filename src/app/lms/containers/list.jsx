@@ -29,21 +29,29 @@ const LMSList = () => {
   const [writeModalData, setWriteModalData] = useState();
   const [detailModalData, setDetailModalData] = useState();
 
+  /** msg */
+  const [msg, setMsg] = useState();
+
   useEffect(() => {
     const params = {
       rowData: lms,
       searchKey: searchKey,
       currentTaskTableKey: coreService.getLocalStorage("currentTaskTable"),
     };
-    async function fetchData() {
-      await searchDo(params);
 
-      await lmsApi.getAllTaskList().then((re) => {
-        setLmsAll(re.data);
-      });
+    if (params.currentTaskTableKey) {
+      async function fetchData() {
+        await searchDo(params);
+  
+        await lmsApi.getAllTaskList().then((re) => {
+          setLmsAll(re.data);
+        });
+      }
+  
+      fetchData();
+    } else {
+      setMsg('데이터가 없습니다. 새로운 데이터를 생성 해 주세요.');
     }
-
-    fetchData();
   }, []);
 
   async function searchFn(value) {
@@ -124,21 +132,25 @@ const LMSList = () => {
         </>
         <>
           <Space size="small">
-            <Button
-              type="primary"
-              onClick={() => {
-                setSaveModal(true);
-              }}
-            >
-              데이터 저장
-            </Button>
+            {
+              lms.length ? (
+                <Button
+                  type="primary"
+                  onClick={() => {
+                    setSaveModal(true);
+                  }}
+                >
+                  데이터 저장
+                </Button>
+              ) : null
+            }
             <Button
               type="primary"
               onClick={() => {
                 loadNewData();
               }}
             >
-              데이터 갱신
+              데이터 생성
             </Button>
           </Space>
         </>
@@ -255,7 +267,7 @@ const LMSList = () => {
           />
         </div>
       ) : (
-        <p>loading</p>
+        <p>{msg ? msg : 'loading'}</p>
       )}
     </Content>
   );

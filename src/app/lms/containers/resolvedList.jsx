@@ -141,7 +141,7 @@ const ResolvedLMSList = () => {
             data={detailModalData}
           />
         </div>
-      ) : null}
+      ) : '제출 한 과제가 없습니다.'}
     </Content>
   );
 };

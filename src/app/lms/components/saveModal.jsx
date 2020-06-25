@@ -126,7 +126,7 @@ const LMSSaveModal = ({
         </Typography.Paragraph>
       ) : null}
       <div style={{ height: 20 }} />
-      <Typography.Text strong={true}>저장된 테이블</Typography.Text>
+      <Typography.Text strong={true}>저장된 테이블 목록</Typography.Text>
       {dataAll
         ? Object.entries(dataAll).map(([key, value]) => (
             <div
