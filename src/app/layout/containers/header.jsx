@@ -1,11 +1,7 @@
-import React, { Component } from "react";
-import { Layout, Typography, Menu } from "antd";
-
-const { Header } = Layout;
+import React from "react";
+import { Typography, Menu } from "antd";
 
 const AppHeader = ({ nav, setNav }) => {
-  // console.log(nav);
-
   return (
     <div
       style={{

@@ -4,8 +4,6 @@ import { Modal, Typography, Input, Divider } from "antd";
 const { TextArea } = Input;
 
 const LMSDetailModal = ({ visible, setVisible, data, dataAll }) => {
-  console.log(data);
-
   return data ? (
     <Modal
       visible={visible}
