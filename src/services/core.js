@@ -1,10 +1,18 @@
 export default {
   setLocalStorage(key, value) {
-    localStorage.setItem(key, JSON.stringify(value));
+    typeof value === 'object' ?
+      (() => {
+        localStorage.setItem(key, JSON.stringify(value));
+      })() :
+      (() => {
+        localStorage.setItem(key, value.toString());
+      })()
   },
 
-  getLocalStorage(key) {
-    return JSON.parse(localStorage.getItem(key));
+  getLocalStorage(key, opt = {}) {
+    return opt.useParse ?
+      JSON.parse(localStorage.getItem(key)) :
+      localStorage.getItem(key);
   },
 
   removeLocalStorage(key) {

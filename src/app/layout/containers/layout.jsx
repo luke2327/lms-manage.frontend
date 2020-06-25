@@ -1,14 +1,17 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import { Layout } from "antd";
 import AppHeader from "./header";
-import LMSList from "app/lms/containers/list.jsx";
+import LMSList from "../../lms/containers/list.jsx";
+import ResolvedLMSList from "../../lms/containers/resolvedList.jsx";
 
 const AppLayout = () => {
+  const [selectedNav, setSelectedNav] = useState("task");
+
   return (
     <Layout>
-      <AppHeader />
+      <AppHeader nav={selectedNav} setNav={setSelectedNav} />
       <div style={{ padding: 25 }}>
-        <LMSList />
+        {selectedNav === "task" ? <LMSList /> : <ResolvedLMSList />}
       </div>
     </Layout>
   );

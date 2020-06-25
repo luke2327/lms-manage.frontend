@@ -1,18 +1,20 @@
-import React, { useState, useEffect } from "react";
-import { Modal, Typography, Descriptions, Divider } from "antd";
+import React from "react";
+import { Modal, Typography, Input, Divider } from "antd";
 
-const LMSDetailModal = ({ visible, setVisible, data }) => {
-  console.log(visible);
+const { TextArea } = Input;
+
+const LMSDetailModal = ({ visible, setVisible, data, dataAll }) => {
   console.log(data);
 
   return data ? (
     <Modal
       visible={visible}
-      width={600}
+      width={data.taskContent ? 900 : 600}
       onCancel={() => {
         setVisible(!visible);
       }}
       title={data.subjectName}
+      footer={null}
     >
       <div
         style={{
@@ -34,6 +36,17 @@ const LMSDetailModal = ({ visible, setVisible, data }) => {
           </Typography.Paragraph>
         ))}
       </div>
+      {data.taskContent ? (
+        <>
+          <Divider style={{ margin: "10px 0" }} />
+          <Typography.Text strong={true}>제출 내용</Typography.Text>
+          <TextArea
+            value={data.taskContent}
+            disabled={true}
+            style={{ color: "#000" }}
+          />
+        </>
+      ) : null}
     </Modal>
   ) : null;
 };
