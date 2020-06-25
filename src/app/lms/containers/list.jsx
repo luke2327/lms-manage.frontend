@@ -51,13 +51,13 @@ const LMSList = () => {
     async function fetchData() {
       if (params.currentTaskTableKey) {
         await searchDo(params);
+
+        await lmsApi.getAllTaskList().then((re) => {
+          setLmsAll(re.data);
+        });
       } else {
         setMsg("데이터가 없습니다. 새로운 데이터를 생성 해 주세요.");
       }
-
-      await lmsApi.getAllTaskList().then((re) => {
-        setLmsAll(re.data);
-      });
     }
 
     fetchData();
