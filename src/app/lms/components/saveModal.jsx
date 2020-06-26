@@ -64,9 +64,25 @@ const LMSSaveModal = ({
 
         setDataAll(allTaskList);
 
-        next(params);
+        next.searchDo(params);
       }
     });
+  }
+
+  async function destory() {
+    await lmsApi.destoryTaskList({}).then(re => {
+      console.log(re);
+    });
+
+    await lmsApi.getAllTaskList().then(({ data }) => {
+      setDataAll(data);
+    });
+
+    coreService.removeLocalStorage('currentTaskTable');
+
+    next.setLms([]);
+    next.setMsg("데이터가 없습니다. 새로운 데이터를 생성 해 주세요.");
+    // next.searchDo();
   }
 
   async function apply(key) {
@@ -97,7 +113,7 @@ const LMSSaveModal = ({
 
       setApplyKey("");
 
-      next(params);
+      next.searchDo(params);
     }
   }
 
@@ -105,18 +121,21 @@ const LMSSaveModal = ({
     <Modal
       title="테이블 저장"
       visible={visible}
-      onCancel={() => {
-        setVisible(!visible);
-      }}
-      onOk={() => {
-        submit();
-      }}
-      okButtonProps={{
-        disabled: modalSubmit,
-      }}
       afterClose={() => {
         onAfterClose();
       }}
+      onCancel={() => {
+        setVisible(!visible);
+      }}
+      footer={
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          { dataAll ? <Button onClick={() => { destory(); }} danger>초기화</Button> : null }
+          <Space>
+            <Button onClick={() => { setVisible(!visible); }}>닫기</Button>
+            <Button onClick={() => { submit(); }} disabled={modalSubmit} type="primary">저장</Button>
+          </Space>
+        </div>
+      }
     >
       <Typography.Text strong={true}>테이블 별명</Typography.Text>
       <Input.Search

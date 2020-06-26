@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Layout, Typography, Table, Space, Button, Input, Select } from "antd";
 import lmsApi from "../../../api/lms";
 import coreService from "../../../services/core";
 import Modal from "../components";
+import { ErrorObject } from '../../../App';
 
 const { Column } = Table;
 const { Option } = Select;
@@ -10,6 +11,8 @@ const { Content } = Layout;
 const { Title } = Typography;
 
 const ResolvedLMSList = () => {
+  const [errMessage] = useContext(ErrorObject);
+
   const [resolvedLms, setResolvedLms] = useState([]);
 
   /** search data */
@@ -28,10 +31,12 @@ const ResolvedLMSList = () => {
     };
 
     async function fetchData() {
-      await searchDo(params);
+        await searchDo(params);
     }
 
-    fetchData();
+    if (params.currentTaskTableKey) {
+      fetchData();
+    }
   }, []);
 
   async function searchFn(value) {
@@ -47,10 +52,12 @@ const ResolvedLMSList = () => {
   async function searchDo(params, next) {
     const res = await lmsApi.getResolvedTaskList(params);
 
-    setResolvedLms(res.data);
+    if (res) {
+      setResolvedLms(res.data);
 
-    if (next) {
-      next(res);
+      if (next) {
+        next(res);
+      }
     }
   }
 
@@ -141,7 +148,7 @@ const ResolvedLMSList = () => {
           />
         </div>
       ) : (
-        "제출 한 과제가 없습니다."
+        errMessage ? errMessage : "제출 한 과제가 없습니다."
       )}
     </Content>
   );

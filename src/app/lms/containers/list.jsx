@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Layout,
   Typography,
@@ -13,6 +13,7 @@ import { CheckCircleTwoTone, CloseCircleOutlined } from "@ant-design/icons";
 import lmsApi from "../../../api/lms";
 import coreService from "../../../services/core";
 import Modal from "../components";
+import { ErrorObject } from '../../../App';
 
 const localStorageAccessKey = "lmsTable";
 const { Column } = Table;
@@ -40,6 +41,7 @@ const LMSList = () => {
 
   /** msg */
   const [msg, setMsg] = useState();
+  const [errMessage] = useContext(ErrorObject);
 
   useEffect(() => {
     const params = {
@@ -89,10 +91,12 @@ const LMSList = () => {
   async function searchDo(params, next) {
     const res = await lmsApi.getTaskList(params);
 
-    setLms(res.data);
+    if (res) {
+      setLms(res.data);
 
-    if (next) {
-      next(res);
+      if (next) {
+        next(res);
+      }
     }
   }
 
@@ -265,7 +269,11 @@ const LMSList = () => {
             data={lms}
             dataAll={lmsAll}
             setDataAll={setLmsAll}
-            next={searchDo}
+            next={{
+              searchDo,
+              setLms,
+              setMsg
+            }}
           />
           <Modal.LMSWriteModal
             visible={writeModal}
@@ -280,7 +288,12 @@ const LMSList = () => {
           />
         </div>
       ) : (
-        <p>{msg ? msg : "loading"}</p>
+        <p>{
+          ( msg || errMessage)
+            ? msg ? msg : errMessage
+            : "loading"
+          }
+        </p>
       )}
     </Content>
   );
