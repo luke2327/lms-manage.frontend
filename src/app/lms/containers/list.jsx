@@ -58,7 +58,7 @@ const LMSList = () => {
           setLmsAll(re.data);
         });
       } else {
-        setMsg('데이터가 없습니다. 새로운 데이터를 생성 해 주세요.');
+        setMsg('데이터가 없습니다. 새로운 데이터를 생성해 주세요.');
       }
     }
 
@@ -74,7 +74,11 @@ const LMSList = () => {
       currentTaskTableKey: currentTableKey,
     };
 
-    await searchDo(params);
+    await searchDo(params, (res) => {
+      if (!res.data.length) {
+        setMsg('검색된 결과가 없습니다.');
+      }
+    });
   }
 
   async function loadNewData() {
@@ -147,6 +151,7 @@ const LMSList = () => {
                     content: '데이터를 생성하셨다면 아래의 모달에서 데이터를 저장 해 주세요.',
                     icon: <ArrowDownOutlined />
                   });
+
                   setSaveModal(true);
                 } else {
                   searchFn(value);

@@ -28,7 +28,7 @@ const App = () => {
     <div className="App">
       <ErrorContext.Provider value={[errMessage, setErrMessage]}>
         <TableContext.Provider value={[currentTableKey, setCurrentTableKey]}>
-          <AppLayout />
+          <AppLayout context={[currentTableKey]} />
         </TableContext.Provider>
       </ErrorContext.Provider>
     </div>
