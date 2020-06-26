@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext } from 'react';
 import {
   Layout,
   Typography,
@@ -8,14 +8,14 @@ import {
   Input,
   Select,
   message,
-} from "antd";
-import { CheckCircleTwoTone, CloseCircleOutlined } from "@ant-design/icons";
-import lmsApi from "../../../api/lms";
-import coreService from "../../../services/core";
-import Modal from "../components";
+} from 'antd';
+import { CheckCircleTwoTone, CloseCircleOutlined, ArrowDownOutlined } from '@ant-design/icons';
+import lmsApi from '../../../api/lms';
+import coreService from '../../../services/core';
+import Modal from '../components';
 import { ErrorObject } from '../../../App';
 
-const localStorageAccessKey = "lmsTable";
+const localStorageAccessKey = 'lmsTable';
 const { Column } = Table;
 const { Option } = Select;
 const { Content } = Layout;
@@ -24,11 +24,11 @@ const { Title } = Typography;
 const LMSList = () => {
   /** main table data */
   const [lms, setLms] = useState([]);
-  const [lmsAll, setLmsAll] = useState([]);
+  const [lmsAll, setLmsAll] = useState();
 
   /** search data */
-  const [searchKey, setSearchKey] = useState("subjectName");
-  const searchKeyList = ["subjectName", "taskName"];
+  const [searchKey, setSearchKey] = useState('subjectName');
+  const searchKeyList = ['subjectName', 'taskName'];
 
   /** modal status */
   const [saveModal, setSaveModal] = useState(false);
@@ -47,7 +47,7 @@ const LMSList = () => {
     const params = {
       rowData: lms,
       searchKey: searchKey,
-      currentTaskTableKey: coreService.getLocalStorage("currentTaskTable"),
+      currentTaskTableKey: coreService.getLocalStorage('currentTaskTable'),
     };
 
     async function fetchData() {
@@ -58,7 +58,7 @@ const LMSList = () => {
           setLmsAll(re.data);
         });
       } else {
-        setMsg("데이터가 없습니다. 새로운 데이터를 생성 해 주세요.");
+        setMsg('데이터가 없습니다. 새로운 데이터를 생성 해 주세요.');
       }
     }
 
@@ -69,7 +69,7 @@ const LMSList = () => {
     const params = {
       searchWord: value,
       searchKey: searchKey,
-      currentTaskTableKey: coreService.getLocalStorage("currentTaskTable"),
+      currentTaskTableKey: coreService.getLocalStorage('currentTaskTable'),
     };
 
     await searchDo(params);
@@ -80,7 +80,7 @@ const LMSList = () => {
 
     const params = {
       rowData: [],
-      searchKey: "all",
+      searchKey: 'all',
     };
 
     await lmsApi.generateTaskList(params).then((re) => {
@@ -101,7 +101,7 @@ const LMSList = () => {
   }
 
   async function submit(key) {
-    const currentTaskTableKey = coreService.getLocalStorage("currentTaskTable");
+    const currentTaskTableKey = coreService.getLocalStorage('currentTaskTable');
     const params = {
       key,
       currentTaskTableKey,
@@ -110,7 +110,7 @@ const LMSList = () => {
     await lmsApi.submitTask(params);
 
     await searchDo({ currentTaskTableKey }, () => {
-      message.success("성공적으로 제출하였습니다.");
+      message.success('성공적으로 제출하였습니다.');
     });
   }
 
@@ -121,7 +121,7 @@ const LMSList = () => {
   return (
     <Content>
       <Title level={4}>미해결 과제 목록</Title>
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <>
           <Input.Group compact>
             <Select
@@ -138,10 +138,16 @@ const LMSList = () => {
               ))}
             </Select>
             <Input.Search
-              style={{ width: "30%" }}
+              style={{ width: '30%' }}
               onSearch={(value, e) => {
-                if (!coreService.getLocalStorage("currentTaskTable")) {
-                  message.error("먼저 데이터를 생성 후 저장 해 주세요.");
+                if (!coreService.getLocalStorage('currentTaskTable') && !lms.length) {
+                  message.error('먼저 데이터를 생성 후 저장 해 주세요.');
+                } else if (!coreService.getLocalStorage('currentTaskTable') && lms.length) {
+                  message.info({
+                    content: '데이터를 생성하셨다면 아래의 모달에서 데이터를 저장 해 주세요.',
+                    icon: <ArrowDownOutlined />
+                  });
+                  setSaveModal(true);
                 } else {
                   searchFn(value);
                 }
@@ -234,7 +240,7 @@ const LMSList = () => {
                     <Button
                       type="primary"
                       size="small"
-                      disabled={text.taskContent ? false : true}
+                      disabled={!text.taskContent}
                       onClick={() => {
                         submit(text.key);
                       }}
@@ -289,10 +295,10 @@ const LMSList = () => {
         </div>
       ) : (
         <p>{
-          ( msg || errMessage)
+          (msg || errMessage)
             ? msg ? msg : errMessage
-            : "loading"
-          }
+            : 'loading'
+        }
         </p>
       )}
     </Content>

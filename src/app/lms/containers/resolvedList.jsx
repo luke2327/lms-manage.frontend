@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useContext } from "react";
-import { Layout, Typography, Table, Space, Button, Input, Select } from "antd";
-import lmsApi from "../../../api/lms";
-import coreService from "../../../services/core";
-import Modal from "../components";
+import React, { useState, useEffect, useContext } from 'react';
+import { Layout, Typography, Table, Space, Button, Input, Select } from 'antd';
+import lmsApi from '../../../api/lms';
+import coreService from '../../../services/core';
+import Modal from '../components';
 import { ErrorObject } from '../../../App';
 
 const { Column } = Table;
@@ -16,8 +16,8 @@ const ResolvedLMSList = () => {
   const [resolvedLms, setResolvedLms] = useState([]);
 
   /** search data */
-  const [searchKey, setSearchKey] = useState("subjectName");
-  const searchKeyList = ["subjectName", "taskName"];
+  const [searchKey, setSearchKey] = useState('subjectName');
+  const searchKeyList = ['subjectName', 'taskName'];
 
   /** modal status */
   const [detailModal, setDetailModal] = useState(false);
@@ -27,11 +27,11 @@ const ResolvedLMSList = () => {
 
   useEffect(() => {
     const params = {
-      currentTaskTableKey: coreService.getLocalStorage("currentTaskTable"),
+      currentTaskTableKey: coreService.getLocalStorage('currentTaskTable'),
     };
 
     async function fetchData() {
-        await searchDo(params);
+      await searchDo(params);
     }
 
     if (params.currentTaskTableKey) {
@@ -43,7 +43,7 @@ const ResolvedLMSList = () => {
     const params = {
       searchWord: value,
       searchKey: searchKey,
-      currentTaskTableKey: coreService.getLocalStorage("currentTaskTable"),
+      currentTaskTableKey: coreService.getLocalStorage('currentTaskTable'),
     };
 
     await searchDo(params);
@@ -68,7 +68,7 @@ const ResolvedLMSList = () => {
   return (
     <Content>
       <Title level={4}>제출한 과제 목록</Title>
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <>
           <Input.Group compact>
             <Select
@@ -85,7 +85,7 @@ const ResolvedLMSList = () => {
               ))}
             </Select>
             <Input.Search
-              style={{ width: "30%" }}
+              style={{ width: '30%' }}
               onSearch={(value, e) => {
                 searchFn(value);
               }}
@@ -148,7 +148,7 @@ const ResolvedLMSList = () => {
           />
         </div>
       ) : (
-        errMessage ? errMessage : "제출 한 과제가 없습니다."
+        errMessage ? errMessage : '제출 한 과제가 없습니다.'
       )}
     </Content>
   );

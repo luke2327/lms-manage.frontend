@@ -1,17 +1,17 @@
-import React from "react";
-import { Typography, Menu } from "antd";
+import React from 'react';
+import { Typography, Menu } from 'antd';
 
 const AppHeader = ({ nav, setNav }) => {
   return (
     <div
       style={{
-        display: "flex",
-        alignItems: "center",
-        backgroundColor: "#001529",
+        display: 'flex',
+        alignItems: 'center',
+        backgroundColor: '#001529',
       }}
     >
       <Typography.Text
-        style={{ color: "#fff", paddingLeft: 20, paddingRight: 20 }}
+        style={{ color: '#fff', paddingLeft: 20, paddingRight: 20 }}
       >
         LMS
       </Typography.Text>
@@ -24,12 +24,12 @@ const AppHeader = ({ nav, setNav }) => {
         }}
         inlineIndent={10}
       >
-        <Menu.Item key="task" style={{ backgroundColor: "transparent" }}>
+        <Menu.Item key="task" style={{ backgroundColor: 'transparent' }}>
           미해결 과제 목록
         </Menu.Item>
         <Menu.Item
           key="resolvedTask"
-          style={{ backgroundColor: "transparent" }}
+          style={{ backgroundColor: 'transparent' }}
         >
           제출한 과제 목록
         </Menu.Item>

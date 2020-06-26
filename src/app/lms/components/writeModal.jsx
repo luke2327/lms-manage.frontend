@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { Modal, Typography, Space, Input } from "antd";
+import React, { useState, useEffect } from 'react';
+import { Modal, Typography, Space, Input } from 'antd';
 
-import lmsApi from "../../../api/lms";
-import coreService from "../../../services/core";
+import lmsApi from '../../../api/lms';
+import coreService from '../../../services/core';
 
 const { TextArea } = Input;
 
 const LMSWriteModal = ({ visible, setVisible, data, next }) => {
-  const [taskContent, setTaskContent] = useState("");
+  const [taskContent, setTaskContent] = useState('');
 
   /** init */
   useEffect(
@@ -20,7 +20,7 @@ const LMSWriteModal = ({ visible, setVisible, data, next }) => {
   );
 
   async function submit() {
-    const currentTaskTableKey = coreService.getLocalStorage("currentTaskTable");
+    const currentTaskTableKey = coreService.getLocalStorage('currentTaskTable');
     const params = {
       key: data.key,
       taskContent,
@@ -41,7 +41,7 @@ const LMSWriteModal = ({ visible, setVisible, data, next }) => {
   return data ? (
     <Modal
       title={
-        <Space style={{ display: "flex", alignItems: "center" }}>
+        <Space style={{ display: 'flex', alignItems: 'center' }}>
           <Typography.Text strong={true}>{data.subjectName}</Typography.Text>
           <Typography.Text style={{ fontSize: 12 }}>
             {data.taskName}

@@ -1,5 +1,5 @@
-import React from "react";
-import { Modal, Typography, Input, Divider } from "antd";
+import React from 'react';
+import { Modal, Typography, Input, Divider } from 'antd';
 
 const { TextArea } = Input;
 
@@ -16,9 +16,9 @@ const LMSDetailModal = ({ visible, setVisible, data, dataAll }) => {
     >
       <div
         style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
         }}
       >
         <Typography.Text strong={true}>{data.taskName}</Typography.Text>
@@ -36,12 +36,13 @@ const LMSDetailModal = ({ visible, setVisible, data, dataAll }) => {
       </div>
       {data.taskContent ? (
         <>
-          <Divider style={{ margin: "10px 0" }} />
+          <Divider style={{ margin: '10px 0' }} />
           <Typography.Text strong={true}>제출 내용</Typography.Text>
           <TextArea
             value={data.taskContent}
             disabled={true}
-            style={{ color: "#000" }}
+            style={{ color: '#000' }}
+            rows={15}
           />
         </>
       ) : null}

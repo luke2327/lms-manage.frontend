@@ -1,7 +1,7 @@
 {
     "env": {
         "browser": true,
-        "es2020": true
+        "es6": true
     },
     "extends": [
         "eslint:recommended",
@@ -11,12 +11,51 @@
         "ecmaFeatures": {
             "jsx": true
         },
-        "ecmaVersion": 11,
+        "ecmaVersion": "2018",
         "sourceType": "module"
     },
     "plugins": [
         "react"
     ],
     "rules": {
+      "no-var": ["error"],																									// var쓰면안됨
+      "no-console": ["warn"],																								// 콘솔쓰면안됨
+      "no-multi-spaces": ["error", { "ignoreEOLComments": true }],					// 쓸모없는 공간 x
+      "no-mixed-spaces-and-tabs": ["error", "smart-tabs"],									// tab하고 space 섞으면 안됨
+      "no-extra-semi": "error",																							// 세미콜론 2개 같이쓰면 안됨
+      "no-unneeded-ternary": "error",																				// 쓸모없는 삼항 금지
+      "no-multiple-empty-lines": ["error", { "max": 1 }],										// 줄바꿈 최대 1개
+      "no-trailing-spaces": ["error"],																			// 제일끝 공백 안됨
+
+      "prefer-const": ["error"],																						// 한번선언하는건 무조건 const
+      "prefer-template": ["error"],																					// 무조건 `` 템플릿으로 강제
+
+      "template-curly-spacing": ["error"],																	// `${ abc}` 금지
+      "computed-property-spacing": ["error", "never"],											// 객체속성 쓸모없는 공백 제거
+      "block-spacing": ["error"],																						// 블록범위 패딩
+      "comma-spacing": ["error", { "before": false, "after": true }],				// {a,b,c} x {a, b, c} O
+      "key-spacing": ["error"],																							// { a:1, b:2 } x { a: 1, b: 2 } O
+      "keyword-spacing": ["error"],																					// if() x if ()
+      "object-curly-spacing": ["error", "always"],													// {a: 1 } x { a: 1 } o
+      "switch-colon-spacing": ["error"],																		// case:
+      "arrow-spacing": ["error"],																						// => {}
+      "semi-spacing": ["error", { "before": false, "after": true }],				// const a ; const a;	// aaerogiajerg
+      "react/prop-types": 0,
+
+      // "arrow-parens": ["error", "as-needed", { "requireForBlockBody": true }],  // 화살표함수 소괄호 필수
+      // "arrow-body-style": ["error", "as-needed"],															  // 화살표함수 중괄호 필수
+      "dot-location": ["error", "property"],																// 엔터후 .
+      "dot-notation": ["error"],																						// 속성 .가능은 .으로읽음
+      "padding-line-between-statements": ["error", { "blankLine": "always", "prev": "*", "next": "return" }, { "blankLine": "always", "prev": ["const", "let", "var"], "next": "*" }, { "blankLine": "any", "prev": ["const", "let", "var"], "next": ["const", "let", "var"] }],
+      "space-before-blocks": "error",
+      "space-in-parens": ["error", "never"],
+      "space-infix-ops": ["error"],
+      "space-unary-ops": ["error"],
+
+      "curly": ["error"],
+      "indent": ["error", 2, { "SwitchCase": 1, "VariableDeclarator": { "var": 2, "let": 2, "const": 3 }, "MemberExpression": 1 }],
+      "quotes": ["error", "single", { "avoidEscape": true }],
+      "quote-props": ["error", "consistent-as-needed"],
+      "semi": ["error", "always"]
     }
 }

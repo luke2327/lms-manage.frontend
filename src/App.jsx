@@ -1,7 +1,7 @@
-import React, { useState, createContext } from "react";
-import AppLayout from "./app/layout/containers/layout.jsx";
+import React, { useState, createContext } from 'react';
+import AppLayout from './app/layout/containers/layout.jsx';
 
-import "./styles/app.module.less";
+import './styles/app.module.less';
 
 let errMessage, setErrMessage;
 
@@ -9,7 +9,7 @@ export const ErrorObject = createContext();
 
 export const receiveErrMessage = (msg) => {
   setErrMessage(msg);
-}
+};
 
 const App = () => {
   [errMessage, setErrMessage] = useState();
