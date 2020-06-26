@@ -9,6 +9,8 @@ const LMSSaveModal = ({
   data,
   dataAll,
   setDataAll,
+  context,
+  setContext,
   next,
 }) => {
   /** table name */
@@ -65,6 +67,8 @@ const LMSSaveModal = ({
 
         coreService.setLocalStorage('currentTaskTable', tableName);
 
+        setContext(tableName);
+
         const allTaskList = await lmsApi.getAllTaskList().then((re) => re.data);
         const params = {
           currentTaskTableKey: tableName,
@@ -86,6 +90,8 @@ const LMSSaveModal = ({
 
     coreService.removeLocalStorage('currentTaskTable');
 
+    setContext('');
+
     next.setLms([]);
     next.setMsg('데이터가 없습니다. 새로운 데이터를 생성 해 주세요.');
 
@@ -97,6 +103,8 @@ const LMSSaveModal = ({
     setApplyKey(key);
 
     coreService.setLocalStorage('currentTaskTable', key);
+
+    setContext(key);
   }
 
   async function deleteTask(key) {
@@ -190,7 +198,7 @@ const LMSSaveModal = ({
               <Button
                 size="small"
                 disabled={
-                  coreService.getLocalStorage('currentTaskTable') === key
+                  context === key
                 }
                 onClick={() => {
                   deleteTask(key);

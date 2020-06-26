@@ -11,14 +11,22 @@ export default {
     console.log("TYPE:", type);
 
     return await axios.post(requestUrl, req).then(re => re).catch(({ response }) => {
-      const { data } = response;
+      if (response) {
+        const { data } = response;
 
-      if (data.status === 'error') {
-        const msg = `API URI: ${url} ERROR NAME: ${data.message}`;
+        if (data.status === 'error') {
+          const msg = `API URI: ${url} ERROR NAME: ${data.message}`;
 
-        receiveErrMessage(msg);
+          receiveErrMessage(msg);
 
-        message.error(msg);
+          message.error(msg);
+        }
+      } else {
+        const unspacedMsg = `에러를 특정지을 수 없습니다. 새로고침 해 주세요.`;
+
+        receiveErrMessage(unspacedMsg);
+
+        message.error(unspacedMsg);
       }
     })
   },

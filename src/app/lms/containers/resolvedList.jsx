@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Layout, Typography, Table, Space, Button, Input, Select } from 'antd';
 import lmsApi from '../../../api/lms';
-import coreService from '../../../services/core';
 import Modal from '../components';
-import { ErrorObject } from '../../../App';
+import { ErrorContext, TableContext } from '../../../App';
 
 const { Column } = Table;
 const { Option } = Select;
@@ -11,7 +10,8 @@ const { Content } = Layout;
 const { Title } = Typography;
 
 const ResolvedLMSList = () => {
-  const [errMessage] = useContext(ErrorObject);
+  const [errMessage] = useContext(ErrorContext);
+  const [currentTableKey] = useContext(TableContext);
 
   const [resolvedLms, setResolvedLms] = useState([]);
 
@@ -27,7 +27,7 @@ const ResolvedLMSList = () => {
 
   useEffect(() => {
     const params = {
-      currentTaskTableKey: coreService.getLocalStorage('currentTaskTable'),
+      currentTaskTableKey: currentTableKey,
     };
 
     async function fetchData() {
@@ -43,7 +43,7 @@ const ResolvedLMSList = () => {
     const params = {
       searchWord: value,
       searchKey: searchKey,
-      currentTaskTableKey: coreService.getLocalStorage('currentTaskTable'),
+      currentTaskTableKey: currentTableKey,
     };
 
     await searchDo(params);

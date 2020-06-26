@@ -11,11 +11,9 @@ import {
 } from 'antd';
 import { CheckCircleTwoTone, CloseCircleOutlined, ArrowDownOutlined } from '@ant-design/icons';
 import lmsApi from '../../../api/lms';
-import coreService from '../../../services/core';
 import Modal from '../components';
-import { ErrorObject } from '../../../App';
+import { ErrorContext, TableContext } from '../../../App';
 
-const localStorageAccessKey = 'lmsTable';
 const { Column } = Table;
 const { Option } = Select;
 const { Content } = Layout;
@@ -25,9 +23,11 @@ const LMSList = () => {
   /** main table data */
   const [lms, setLms] = useState([]);
   const [lmsAll, setLmsAll] = useState();
+  const [currentTableKey, setCurrentTableKey] = useContext(TableContext);
 
   /** search data */
   const [searchKey, setSearchKey] = useState('subjectName');
+  const [searchWord, setSearchWord] = useState('');
   const searchKeyList = ['subjectName', 'taskName'];
 
   /** modal status */
@@ -41,13 +41,13 @@ const LMSList = () => {
 
   /** msg */
   const [msg, setMsg] = useState();
-  const [errMessage] = useContext(ErrorObject);
+  const [errMessage] = useContext(ErrorContext);
 
   useEffect(() => {
     const params = {
       rowData: lms,
       searchKey: searchKey,
-      currentTaskTableKey: coreService.getLocalStorage('currentTaskTable'),
+      currentTaskTableKey: currentTableKey,
     };
 
     async function fetchData() {
@@ -66,18 +66,18 @@ const LMSList = () => {
   }, []);
 
   async function searchFn(value) {
+    setSearchWord(value);
+
     const params = {
       searchWord: value,
       searchKey: searchKey,
-      currentTaskTableKey: coreService.getLocalStorage('currentTaskTable'),
+      currentTaskTableKey: currentTableKey,
     };
 
     await searchDo(params);
   }
 
   async function loadNewData() {
-    coreService.removeLocalStorage(localStorageAccessKey);
-
     const params = {
       rowData: [],
       searchKey: 'all',
@@ -101,7 +101,7 @@ const LMSList = () => {
   }
 
   async function submit(key) {
-    const currentTaskTableKey = coreService.getLocalStorage('currentTaskTable');
+    const currentTaskTableKey = currentTableKey;
     const params = {
       key,
       currentTaskTableKey,
@@ -140,9 +140,9 @@ const LMSList = () => {
             <Input.Search
               style={{ width: '30%' }}
               onSearch={(value, e) => {
-                if (!coreService.getLocalStorage('currentTaskTable') && !lms.length) {
+                if (!currentTableKey && !lms.length) {
                   message.error('먼저 데이터를 생성 후 저장 해 주세요.');
-                } else if (!coreService.getLocalStorage('currentTaskTable') && lms.length) {
+                } else if (!currentTableKey && lms.length) {
                   message.info({
                     content: '데이터를 생성하셨다면 아래의 모달에서 데이터를 저장 해 주세요.',
                     icon: <ArrowDownOutlined />
@@ -275,6 +275,8 @@ const LMSList = () => {
             data={lms}
             dataAll={lmsAll}
             setDataAll={setLmsAll}
+            context={currentTableKey}
+            setContext={setCurrentTableKey}
             next={{
               searchDo,
               setLms,
@@ -285,6 +287,9 @@ const LMSList = () => {
             visible={writeModal}
             setVisible={setWriteModal}
             data={writeModalData}
+            context={currentTableKey}
+            searchKey={searchKey}
+            searchWord={searchWord}
             next={searchDo}
           />
           <Modal.LMSDetailModal

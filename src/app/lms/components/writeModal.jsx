@@ -2,11 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Typography, Space, Input } from 'antd';
 
 import lmsApi from '../../../api/lms';
-import coreService from '../../../services/core';
 
 const { TextArea } = Input;
 
-const LMSWriteModal = ({ visible, setVisible, data, next }) => {
+const LMSWriteModal = ({ visible, setVisible, data, context, searchKey, searchWord, next }) => {
   const [taskContent, setTaskContent] = useState('');
 
   /** init */
@@ -20,7 +19,7 @@ const LMSWriteModal = ({ visible, setVisible, data, next }) => {
   );
 
   async function submit() {
-    const currentTaskTableKey = coreService.getLocalStorage('currentTaskTable');
+    const currentTaskTableKey = context;
     const params = {
       key: data.key,
       taskContent,
@@ -34,7 +33,11 @@ const LMSWriteModal = ({ visible, setVisible, data, next }) => {
 
     /** update table list */
     if (next) {
-      next({ currentTaskTableKey });
+      next({
+        currentTaskTableKey,
+        searchKey,
+        searchWord
+      });
     }
   }
 
