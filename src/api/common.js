@@ -1,14 +1,16 @@
-import axios from "axios";
+import axios from 'axios';
 import { message } from 'antd';
 import { receiveErrMessage } from '../App';
 
-const apiURIScheme = "http://localhost:6050/";
+const apiURIScheme = 'http://ec2-3-37-36-193.ap-northeast-2.compute.amazonaws.com:6050/';
+// const apiURIScheme = "http://localhost:6050/";
 
 export default {
-  send: async (url, req, type = "post") => {
+  send: async (url, req, type = 'post') => {
     const requestUrl = apiURIScheme + url;
-    console.log("URL :", requestUrl);
-    console.log("TYPE:", type);
+
+    console.log('URL :', requestUrl);
+    console.log('TYPE:', type);
 
     return await axios.post(requestUrl, req).then(re => re).catch(({ response }) => {
       if (response) {
@@ -22,12 +24,12 @@ export default {
           message.error(msg);
         }
       } else {
-        const unspacedMsg = `에러를 특정지을 수 없습니다. 새로고침 해 주세요.`;
+        const unspacedMsg = '에러를 특정지을 수 없습니다. 새로고침 해 주세요.';
 
         receiveErrMessage(unspacedMsg);
 
         message.error(unspacedMsg);
       }
-    })
+    });
   },
 };
