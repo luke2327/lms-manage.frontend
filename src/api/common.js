@@ -2,7 +2,7 @@ import axios from 'axios';
 import { message } from 'antd';
 import { receiveErrMessage } from '../App';
 
-const apiURIScheme = 'http://api.lms.malihua.jp/';
+const apiURIScheme = 'https://api.lms.malihua.jp/';
 // const apiURIScheme = "http://localhost:6050/";
 
 export default {
