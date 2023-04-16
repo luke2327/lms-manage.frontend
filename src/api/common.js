@@ -2,15 +2,15 @@ import axios from 'axios';
 import { message } from 'antd';
 import { receiveErrMessage } from '../App';
 
-const apiURIScheme = 'http://ec2-3-37-36-193.ap-northeast-2.compute.amazonaws.com:6050/';
+const apiURIScheme = 'http://api.lms.malihua.jp';
 // const apiURIScheme = "http://localhost:6050/";
 
 export default {
   send: async (url, req, type = 'post') => {
     const requestUrl = apiURIScheme + url;
 
-    console.log('URL :', requestUrl);
-    console.log('TYPE:', type);
+    // console.log('URL :', requestUrl);
+    // console.log('TYPE:', type);
 
     return await axios.post(requestUrl, req).then(re => re).catch(({ response }) => {
       if (response) {
